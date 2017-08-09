@@ -120,31 +120,71 @@ if ($_POST)
         //sql statement
         $sql = "SELECT * FROM $table WHERE email = $smart_email";
         $query = mysqli_query($db,$sql);
-
-
-        // sql statement
-        $sql = "INSERT INTO $table SET firstname = $smart_firstname, lastname = $smart_lastname, email = $smart_email, password_md5 = $smart_password_md5, autoresponder = $smart_autoresponder, ip_address = $smart_ip_address, blah = $smart_blah ";
-echo $sql;
-
-        // insert into database
-        $query = mysqli_query($db,$sql);
-
-        // error handling - write to error_log file if an error
-        $error_mysqli = $message = $status = "";
-        $error_mysqli = mysqli_error($db);
-        if ($error_mysqli != "")
+        $id = 0;
+        if ($query)
         {
-            error_log("SQL: ".$sql." ERROR: ".$error_mysqli);
-            $message = "Error adding";
-            $status = "danger";
-        }
-        else
-        {
-            $message = "Successfully added\n";
-            $status = "success";
-            $confirm_url = "";
+            if ($sql = mysqli_fetch_assoc($query))
+            {
+                do {
+                    $id = stripslashes($sql['id']);
+                }
+                while ($sql = mysqli_fetch_assoc($query));
+            }
         }
 
+        //duplicate email search
+        if (preg_match("/\+/", $email))
+        {
+          preg_match("/(.*?)\+.*?\@(.*)/", $email, $matches);
+          $email_special = $matches[1]."%".$matches[2];
+          $smart_email = quote_smart($email_special);
+          $sql = "SELECT * FROM $table WHERE email LIKE $smart_email";
+echo $sql."<br>";
+          $query = mysqli_query($db,$sql);
+          $id = 0;
+          if ($query)
+          {
+              if ($sql = mysqli_fetch_assoc($query))
+              {
+                  do {
+                      $id = stripslashes($sql['id']);
+                  }
+                  while ($sql = mysqli_fetch_assoc($query));
+              }
+          }
+        }
+
+        if ($id > 0)
+        {
+          $error = "yes";
+          $error_message .= "Email already exists<br>\n";
+        }
+
+        if ($error == "no")
+        {
+            // sql statement
+            $sql = "INSERT INTO $table SET firstname = $smart_firstname, lastname = $smart_lastname, email = $smart_email, password_md5 = $smart_password_md5,
+            autoresponder = $smart_autoresponder, ip_address = $smart_ip_address, blah = $smart_blah ";
+
+            // insert into database
+            $query = mysqli_query($db,$sql);
+
+            // error handling - write to error_log file if an error
+            $error_mysqli = $message = $status = "";
+            $error_mysqli = mysqli_error($db);
+            if ($error_mysqli != "")
+            {
+                error_log("SQL: ".$sql." ERROR: ".$error_mysqli);
+                $message = "Error adding";
+                $status = "danger";
+            }
+            else
+            {
+                $message = "Successfully added\n";
+                $status = "success";
+                $confirm_url = "";
+            }
+        }
     }
 
 }
@@ -228,3 +268,68 @@ foreach ($autoresponder_array as $v)
         </div>
     </body>
 </html>
+
+<?php
+
+
+/*
+
+-- phpMyAdmin SQL Dump
+-- version 4.7.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Aug 09, 2017 at 02:03 AM
+-- Server version: 10.1.25-MariaDB
+-- PHP Version: 7.1.7
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Database: `viral`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `members`
+--
+
+CREATE TABLE `members` (
+  `id` int(11) NOT NULL,
+  `firstname` text NOT NULL,
+  `lastname` text NOT NULL,
+  `email` text NOT NULL,
+  `password_md5` text NOT NULL,
+  `autoresponder` text NOT NULL,
+  `deleted` int(11) NOT NULL,
+  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ip_address` text NOT NULL,
+  `blah` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `members`
+--
+ALTER TABLE `members`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `members`
+--
+ALTER TABLE `members`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
+*/
+
+ ?>
