@@ -6,6 +6,8 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 http://localhost/test/register.php
 
+https://integratepro.net/viral/show.php
+
 Database:
 
 id - int
@@ -98,7 +100,7 @@ if ($_POST)
 
         // prepare extra variables
         $password_md5 = md5($password);
-        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $ip_address = ($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'NULL';
         $blah = json_encode($_POST);
 
         // connect to database
@@ -112,7 +114,6 @@ if ($_POST)
         $smart_lastname = quote_smart($lastname);
         $smart_email = quote_smart($email);
         $smart_password_md5 = quote_smart($password_md5);
-        $smart_deleted = 0;
         $smart_autoresponder = quote_smart($autoresponder);
         $smart_ip_address = quote_smart($ip_address);
         $smart_blah = quote_smart($blah);
@@ -139,9 +140,7 @@ if ($_POST)
           $email_special = $matches[1]."%".$matches[2];
           $smart_email = quote_smart($email_special);
           $sql = "SELECT * FROM $table WHERE email LIKE $smart_email";
-echo $sql."<br>";
           $query = mysqli_query($db,$sql);
-          $id = 0;
           if ($query)
           {
               if ($sql = mysqli_fetch_assoc($query))
