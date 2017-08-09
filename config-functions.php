@@ -1,14 +1,12 @@
 <?php
-$mysqli_db = "viral";                    // database name
+
+$mysqli_db = "viral";                  // database name
 $mysqli_username = "root";             // database username
-$mysqli_password = "";                      // database password
-$mysqli_host = "localhost";                        // database host
-
-
+$mysqli_password = "";                 // database password
+$mysqli_host = "localhost";            // database host
 
 /*
  * function clean_up_auto_increment
- *
  */
 function clean_up_auto_increment($mysqli_table, $column) {
     global $db;
@@ -23,11 +21,8 @@ function clean_up_auto_increment($mysqli_table, $column) {
     if ($debug == "yes") print $error."<br>";
 }
 
-
-
 /*
  * function connectDatabase
- *
  */
 function connectDatabase($mysqli_host, $mysqli_username, $mysqli_password, $mysqli_db) {
     // clear up variables
@@ -45,22 +40,16 @@ function connectDatabase($mysqli_host, $mysqli_username, $mysqli_password, $mysq
     return $db;
 }
 
-
-
 /*
  * function closeDatabase
- *
  */
 function closeDatabase($db) {
     // close connection to database
     mysqli_close($db);
 }
 
-
-
 /*
  * function quote_smart
- *
  */
 function quote_smart($value) {
     global $db;
@@ -74,11 +63,8 @@ function quote_smart($value) {
     }
 }
 
-
-
 /*
  * function pagination
- *
  */
 function pagination($table, $extra=NULL, $pageno, $rows_per_page) {
     global $db;
@@ -124,8 +110,8 @@ function pagination($table, $extra=NULL, $pageno, $rows_per_page) {
     return $pagination_display_array;
 }
 
-
 ?>
+
 <?php
 /*
 CREATE TABLE IF NOT EXISTS `results` (

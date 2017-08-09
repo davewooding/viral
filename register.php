@@ -1,15 +1,9 @@
 <?php
 
-error_reporting(E_ALL & ~E_NOTICE);
-
 /* NOTES
-
 http://localhost/test/register.php
-
 https://integratepro.net/viral/show.php
-
 Database:
-
 id - int
 firstname - text
 lastname - text
@@ -20,20 +14,19 @@ deleted - int (0, 1)
 datetime - time
 ip_address - text
 blah
-
 */
+
+error_reporting(E_ALL & ~E_NOTICE);
 
 if ($_POST)
 {
-//echo "<pre>"; print_r($_POST); echo "</pre>";
+    //echo "<pre>"; print_r($_POST); echo "</pre>";
     // echo "<pre>"; print_r($_SERVER); echo "</pre>";
     // do error checking
-
     foreach ($_POST as $k => $v)
     {
         $$k = trim(strip_tags($v));
     }
-
     $error = "no";
 
     // firstname empty
@@ -152,13 +145,11 @@ if ($_POST)
               }
           }
         }
-
         if ($id > 0)
         {
           $error = "yes";
           $error_message .= "Email already exists<br>\n";
         }
-
         if ($error == "no")
         {
             // sql statement
@@ -185,35 +176,34 @@ if ($_POST)
             }
         }
     }
-
 }
-
 $autoresponder_array = array(
     "activecampaign",
     "infusionsoft",
     "ontraport",
 );
-
 foreach ($autoresponder_array as $v)
 {
     $V = ucfirst($v);
     $checked = "";
     if ($v == $autoresponder) $checked = "checked";
-    $autoresponder_select .= "                  <label class=\"form-check-label\">\n";
-    $autoresponder_select .= "                    <input type=\"radio\" class=\"form-check-input\" name=\"autoresponder\" id=\"autoresponder\" value=\"".$v."\" ".$checked.">\n";
-    $autoresponder_select .= "                    ".$V."\n";
-    $autoresponder_select .= "                  </label>\n";
+    $autoresponder_select .= "<label class=\"form-check-label\">\n";
+    $autoresponder_select .= "<input type=\"radio\" class=\"form-check-input\" name=\"autoresponder\" id=\"autoresponder\" value=\"".$v."\" ".$checked.">\n";
+    $autoresponder_select .= "".$V."\n";
+    $autoresponder_select .= "</label>\n";
 }
-
 ?>
+
 <html>
     <head>
-<?php echo $message; ?>
-<?php echo $error_message; ?>
+      <?php echo $message; ?>
+      <?php echo $error_message; ?>
         <title>Register</title>
         <?php if ($status == "success") {?>
+
         <!--<meta content="2;URL=<?php echo $confirm_url; ?>" http-equiv="refresh" />-->
         <?php } ?>
+
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -250,12 +240,11 @@ foreach ($autoresponder_array as $v)
                 <input type="password" class="form-control" name="password" id="password" placeholder="Password">
               </div>
             </div>
-
             <div class="form-check-row">
             <div class="form-group row">
               <label for="autoresponder" class="col-sm-2 col-form-label">Autoresponder</label>
                <div class="col-sm-10">
-<?php echo $autoresponder_select; ?>
+                 <?php echo $autoresponder_select; ?>
                </div>
             </div>
             <div class="form-group row">
@@ -270,9 +259,7 @@ foreach ($autoresponder_array as $v)
 
 <?php
 
-
 /*
-
 -- phpMyAdmin SQL Dump
 -- version 4.7.0
 -- https://www.phpmyadmin.net/
@@ -281,22 +268,17 @@ foreach ($autoresponder_array as $v)
 -- Generation Time: Aug 09, 2017 at 02:03 AM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 7.1.7
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 --
 -- Database: `viral`
 --
-
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `members`
 --
-
 CREATE TABLE `members` (
   `id` int(11) NOT NULL,
   `firstname` text NOT NULL,
@@ -309,21 +291,17 @@ CREATE TABLE `members` (
   `ip_address` text NOT NULL,
   `blah` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 --
 -- Indexes for dumped tables
 --
-
 --
 -- Indexes for table `members`
 --
 ALTER TABLE `members`
   ADD PRIMARY KEY (`id`);
-
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
 --
 -- AUTO_INCREMENT for table `members`
 --
