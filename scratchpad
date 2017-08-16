@@ -1,0 +1,28 @@
+/*****
+* protection
+*
+*****/
+$right_now = time();
+$right_now_outsource = 0;
+$right_now_one_hour = $right_now - 3600;
+$right_now_two_hour = $right_now - 7200;
+$right_now_three_hour = $right_now - 10800;
+$right_now_twentyfour_hour = $right_now - 86400;
+if ($_SESSION['login_time']) $right_now_outsource = $_SESSION['login_time'];
+if ($right_now_outsource < $right_now_twentyfour_hour) {
+	$login = "no";
+} else {
+	$login = "yes";
+}
+
+
+$right_now = time();
+
+		// set session
+		$_SESSION['login_time'] = time();
+		$_SESSION['last_update'] = $last_update;
+		$_SESSION['email'] = $email;
+		
+		$login = "yes";
+		header("Location:". $self);
+		die;
