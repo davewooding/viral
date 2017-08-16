@@ -43,7 +43,7 @@ if ($_POST)
     if ($error == "no")
     {
         // include config / functions file
-        if (file_exists("config-functions.php"))
+                if (file_exists("config-functions.php"))
         {
             include_once("config-functions.php");
         }
