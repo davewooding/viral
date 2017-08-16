@@ -43,7 +43,7 @@ if ($_POST)
     if ($error == "no")
     {
         // include config / functions file
-                if (file_exists("config-functions.php"))
+        if (file_exists("config-functions.php"))
         {
             include_once("config-functions.php");
         }
@@ -64,15 +64,18 @@ if ($_POST)
         $table = "members";
 
         // prepare variables for database, int values get nothing, text get backslashed
-        $smart_firstname = quote_smart($firstname);
-        $smart_lastname = quote_smart($lastname);
         $smart_email = quote_smart($email);
         $smart_password_md5 = quote_smart($password_md5);
-        $smart_autoresponder = quote_smart($autoresponder);
         $smart_ip_address = quote_smart($ip_address);
         $smart_blah = quote_smart($blah);
 
-        //sql statement
+        //sql statement @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        $sql = "SELECT $smart_email from
+          from DBname.sys.tables
+         where name like '%xxx%'
+
+
+
         $sql = "SELECT * FROM $table WHERE email = $smart_email";
         $query = mysqli_query($db,$sql);
         $id = 0;
@@ -116,9 +119,6 @@ if ($_POST)
             // sql statement
             $sql = "INSERT INTO $table SET firstname = $smart_firstname, lastname = $smart_lastname, email = $smart_email, password_md5 = $smart_password_md5,
             autoresponder = $smart_autoresponder, ip_address = $smart_ip_address, blah = $smart_blah ";
-
-            // insert into database
-            $query = mysqli_query($db,$sql);
 
             // error handling - write to error_log file if an error
             $error_mysqli = $message = $status = "";
