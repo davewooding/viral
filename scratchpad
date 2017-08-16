@@ -1,0 +1,12 @@
+function full_url( $s, $use_forwarded_host = false )
+{
+	$url = $_SERVER['REQUEST_URI']; //returns the current URL
+	$parts = explode('/',$url);
+	$dir = $_SERVER['SERVER_NAME'];
+	for ($i = 0; $i < count($parts) - 1; $i++) {
+		$dir .= $parts[$i] . "/";
+	}
+	return url_origin( $s, $use_forwarded_host ) . $dir;
+}
+
+$self = full_url( $_SERVER );
