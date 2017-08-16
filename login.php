@@ -69,13 +69,7 @@ if ($_POST)
         $smart_ip_address = quote_smart($ip_address);
         $smart_blah = quote_smart($blah);
 
-        //sql statement @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        $sql = "SELECT $smart_email from
-          from DBname.sys.tables
-         where name like '%xxx%'
-
-
-
+        //sql statement
         $sql = "SELECT * FROM $table WHERE email = $smart_email";
         $query = mysqli_query($db,$sql);
         $id = 0;
