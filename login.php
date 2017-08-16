@@ -1,18 +1,16 @@
 <?php
 
 /* NOTES
-http://localhost/test/register.php
-Database:
-id - int
-firstname - text
-lastname - text
-email - text
-password - text (md5)
-autoresponder - text
-deleted - int (0, 1)
-datetime - time
-ip_address - text
-blah
+http://localhost/test/login.php
+
+1) User hits fills form and clicks login button
+2) Record email and password entered as variables
+2) Search viral datatbase for matching email (identical)
+  i. If email match found, compare md5 passwords
+    a. If md5 passwords match, successful login
+    b. If md5 passwords do not match, "invalid password"
+  ii. If email match not found, "invalid email/does not exist"
+
 */
 
 error_reporting(E_ALL & ~E_NOTICE);
@@ -28,20 +26,6 @@ if ($_POST)
     }
     $error = "no";
 
-    // firstname empty
-    if ($firstname == "")
-    {
-      $error = "yes";
-      $error_message .= "First Name missing<br>\n";
-    }
-
-    // lastname empty
-    if ($lastname == "")
-    {
-      $error = "yes";
-      $error_message .= "Last Name missing<br>\n";
-    }
-
     // email empty
     if ($email == "")
     {
@@ -49,33 +33,11 @@ if ($_POST)
       $error_message .= "Email missing<br>\n";
     }
 
-    // email invalid format
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL) && $email != "")
-    {
-      $error = "yes";
-      $error_message .= "Email invalid<br>\n";
-    }
-
-    // email invalid domain
-    $domain = substr(strrchr($email, "@"), 1);
-    if (!checkdnsrr($domain, 'MX') && $email != "")
-    {
-      $error = "yes";
-      $error_message .= "No MX record<br>\n";
-    }
-
     // password empty
     if ($password == "")
     {
       $error = "yes";
       $error_message .= "Password missing<br>\n";
-    }
-
-    // autoresponder empty
-    if ($autoresponder == "")
-    {
-      $error = "yes";
-      $error_message .= "Autoresponder missing<br>\n";
     }
 
     if ($error == "no")
@@ -176,28 +138,14 @@ if ($_POST)
         }
     }
 }
-$autoresponder_array = array(
-    "activecampaign",
-    "infusionsoft",
-    "ontraport",
-);
-foreach ($autoresponder_array as $v)
-{
-    $V = ucfirst($v);
-    $checked = "";
-    if ($v == $autoresponder) $checked = "checked";
-    $autoresponder_select .= "<label class=\"form-check-label\">\n";
-    $autoresponder_select .= "<input type=\"radio\" class=\"form-check-input\" name=\"autoresponder\" id=\"autoresponder\" value=\"".$v."\" ".$checked.">\n";
-    $autoresponder_select .= "".$V."\n";
-    $autoresponder_select .= "</label>\n";
-}
+
 ?>
 
 <html>
     <head>
       <?php echo $message; ?>
       <?php echo $error_message; ?>
-        <title>Register</title>
+        <title>Login</title>
         <?php if ($status == "success") {?>
 
         <!--<meta content="2;URL=<?php echo $confirm_url; ?>" http-equiv="refresh" />-->
@@ -216,96 +164,23 @@ foreach ($autoresponder_array as $v)
         <div class="container">
           <form method="post" action="">
             <div class="form-group row">
-              <label for="firstname" class="col-sm-2 col-form-label">First Name</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First Name" value="<?php echo $firstname; ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="lastname" class="col-sm-2 col-form-label">Last Name</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Last Name" value="<?php echo $lastname; ?>">
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="email" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?php echo $email; ?>">
+                <input type="text" class="form-control" name="email" id="email" placeholder="Email" value="<?php echo $email; ?>">
               </div>
             </div>
             <div class="form-group row">
               <label for="password" class="col-sm-2 col-form-label">Password</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                <input type="text" class="form-control" name="password" id="password" placeholder="Password" value="<?php echo $password; ?>">
               </div>
-            </div>
-            <div class="form-check-row">
-            <div class="form-group row">
-              <label for="autoresponder" class="col-sm-2 col-form-label">Autoresponder</label>
-               <div class="col-sm-10">
-                 <?php echo $autoresponder_select; ?>
-               </div>
             </div>
             <div class="form-group row">
               <div class="offset-sm-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <button type="submit" class="btn btn-primary">Login</button>
               </div>
             </div>
           </form>
         </div>
     </body>
 </html>
-
-<?php
-
-/*
--- phpMyAdmin SQL Dump
--- version 4.7.0
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Aug 09, 2017 at 02:03 AM
--- Server version: 10.1.25-MariaDB
--- PHP Version: 7.1.7
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
---
--- Database: `viral`
---
--- --------------------------------------------------------
---
--- Table structure for table `members`
---
-CREATE TABLE `members` (
-  `id` int(11) NOT NULL,
-  `firstname` text NOT NULL,
-  `lastname` text NOT NULL,
-  `email` text NOT NULL,
-  `password_md5` text NOT NULL,
-  `autoresponder` text NOT NULL,
-  `deleted` int(11) NOT NULL,
-  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `ip_address` text NOT NULL,
-  `blah` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
---
--- Indexes for dumped tables
---
---
--- Indexes for table `members`
---
-ALTER TABLE `members`
-  ADD PRIMARY KEY (`id`);
---
--- AUTO_INCREMENT for dumped tables
---
---
--- AUTO_INCREMENT for table `members`
---
-ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
-*/
-
- ?>
